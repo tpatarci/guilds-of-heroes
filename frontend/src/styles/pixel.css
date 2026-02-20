@@ -1,0 +1,73 @@
+/* Pixel-art borders via box-shadow technique */
+
+.pixel-border {
+  box-shadow:
+    /* outer border */
+    -2px 0 0 0 var(--treasure-gold),
+    2px 0 0 0 var(--treasure-gold),
+    0 -2px 0 0 var(--treasure-gold),
+    0 2px 0 0 var(--treasure-gold),
+    /* corners */
+    -2px -2px 0 0 var(--treasure-gold),
+    2px -2px 0 0 var(--treasure-gold),
+    -2px 2px 0 0 var(--treasure-gold),
+    2px 2px 0 0 var(--treasure-gold);
+}
+
+.pixel-border-red {
+  box-shadow:
+    -2px 0 0 0 var(--dragon-red),
+    2px 0 0 0 var(--dragon-red),
+    0 -2px 0 0 var(--dragon-red),
+    0 2px 0 0 var(--dragon-red),
+    -2px -2px 0 0 var(--dragon-red),
+    2px -2px 0 0 var(--dragon-red),
+    -2px 2px 0 0 var(--dragon-red),
+    2px 2px 0 0 var(--dragon-red);
+}
+
+.pixel-border-green {
+  box-shadow:
+    -2px 0 0 0 var(--potion-green),
+    2px 0 0 0 var(--potion-green),
+    0 -2px 0 0 var(--potion-green),
+    0 2px 0 0 var(--potion-green),
+    -2px -2px 0 0 var(--potion-green),
+    2px -2px 0 0 var(--potion-green),
+    -2px 2px 0 0 var(--potion-green),
+    2px 2px 0 0 var(--potion-green);
+}
+
+/* Shake animation for dice */
+@keyframes dice-shake {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  10% { transform: translate(-2px, -1px) rotate(-3deg); }
+  20% { transform: translate(2px, 1px) rotate(3deg); }
+  30% { transform: translate(-1px, 2px) rotate(-2deg); }
+  40% { transform: translate(1px, -2px) rotate(2deg); }
+  50% { transform: translate(-2px, 1px) rotate(-1deg); }
+  60% { transform: translate(2px, -1px) rotate(1deg); }
+  70% { transform: translate(-1px, -2px) rotate(-3deg); }
+  80% { transform: translate(1px, 2px) rotate(3deg); }
+  90% { transform: translate(-2px, -1px) rotate(2deg); }
+}
+
+.dice-rolling {
+  animation: dice-shake 0.4s ease-in-out;
+}
+
+/* Reveal animation */
+@keyframes reveal {
+  0% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.dice-result {
+  animation: reveal 0.3s ease-out;
+}
+
+/* Glow effect for gold items */
+.gold-glow {
+  text-shadow: 0 0 10px var(--treasure-gold), 0 0 20px rgba(226, 183, 20, 0.3);
+}

@@ -1,0 +1,41 @@
+[Unit]
+Description=Guilds of Heroes API (Gunicorn)
+After=network.target
+
+[Service]
+Type=notify
+
+# Run as a dedicated non-root user
+User=goh
+Group=goh
+WorkingDirectory=/opt/goh
+
+# Load environment from a secure file
+EnvironmentFile=/opt/goh/.env
+
+# Activate venv and start Gunicorn with 2 sync workers
+ExecStart=/opt/goh/.venv/bin/gunicorn \
+    --workers 2 \
+    --bind 127.0.0.1:5050 \
+    --timeout 60 \
+    --keep-alive 5 \
+    --log-level info \
+    --access-logfile /var/log/goh/access.log \
+    --error-logfile /var/log/goh/error.log \
+    "api.app:create_app()"
+
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+Restart=on-failure
+RestartSec=5
+
+# Sandboxing
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/goh /var/log/goh
+
+[Install]
+WantedBy=multi-user.target
