@@ -6,7 +6,10 @@ import { useFeed } from '../hooks/useFeed';
 import { PostCard } from '../components/feed/PostCard';
 import { PixelCard } from '../components/common/PixelCard';
 import { PixelButton } from '../components/common/PixelButton';
-import { colors, fonts } from '../styles/theme';
+import { PostCardSkeleton } from '../components/common/Skeleton';
+import { Skeleton } from '../components/common/Skeleton';
+import { SwordIcon } from '../components/common/Icons';
+import { colors } from '../styles/theme';
 import type { User } from '../types';
 
 export default function ProfilePage() {
@@ -54,15 +57,7 @@ export default function ProfilePage() {
 
   if (profileError) {
     return (
-      <div
-        style={{
-          fontFamily: fonts.heading,
-          fontSize: '12px',
-          color: colors.dragonRed,
-          textAlign: 'center',
-          padding: '60px',
-        }}
-      >
+      <div className="empty-state" style={{ color: colors.dragonRed }}>
         {profileError}
       </div>
     );
@@ -70,75 +65,41 @@ export default function ProfilePage() {
 
   if (!profile) {
     return (
-      <div
-        style={{
-          fontFamily: fonts.heading,
-          fontSize: '10px',
-          color: colors.dimText,
-          textAlign: 'center',
-          padding: '60px',
-        }}
-      >
-        Loading adventurer...
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <PixelCard static>
+          <div style={{ display: 'flex', gap: 20 }}>
+            <Skeleton variant="avatar-lg" />
+            <div style={{ flex: 1 }}>
+              <Skeleton variant="heading" />
+              <Skeleton variant="text-short" />
+              <Skeleton variant="text" />
+            </div>
+          </div>
+        </PixelCard>
+        <PostCardSkeleton />
+        <PostCardSkeleton />
       </div>
     );
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      {/* Profile header */}
-      <PixelCard>
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-          {/* Avatar */}
-          <div
-            className="pixel-border"
-            style={{
-              width: '72px',
-              height: '72px',
-              background: colors.darkPurple,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontFamily: fonts.heading,
-              fontSize: '28px',
-              color: colors.treasureGold,
-              flexShrink: 0,
-            }}
-          >
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <PixelCard static>
+        <div className="profile-header">
+          <div className="profile-avatar pixel-border">
             {profile.display_name?.[0]?.toUpperCase() || profile.username[0].toUpperCase()}
           </div>
 
-          <div style={{ flex: 1 }}>
-            <h2
-              style={{
-                fontFamily: fonts.heading,
-                fontSize: '14px',
-                color: colors.treasureGold,
-                marginBottom: '4px',
-              }}
-              className="gold-glow"
-            >
+          <div className="flex-1">
+            <h2 className="profile-name gold-glow">
               {profile.display_name || profile.username}
             </h2>
-            <div
-              style={{
-                fontFamily: fonts.body,
-                fontSize: '13px',
-                color: colors.dimText,
-                marginBottom: '8px',
-              }}
-            >
+            <div className="profile-username">
               @{profile.username}
               {profile.role && profile.role !== 'player' && (
                 <span
-                  style={{
-                    marginLeft: '8px',
-                    fontFamily: fonts.heading,
-                    fontSize: '7px',
-                    color: colors.dungeonBlack,
-                    background: profile.role === 'admin' ? colors.dragonRed : colors.treasureGold,
-                    padding: '2px 6px',
-                  }}
+                  className={`badge ${profile.role === 'admin' ? 'badge--red' : 'badge--gold'}`}
+                  style={{ marginLeft: 8 }}
                 >
                   {profile.role.toUpperCase()}
                 </span>
@@ -146,36 +107,18 @@ export default function ProfilePage() {
             </div>
 
             {profile.bio && (
-              <p
-                style={{
-                  fontFamily: fonts.body,
-                  fontSize: '13px',
-                  color: colors.parchment,
-                  lineHeight: '1.6',
-                  marginBottom: '12px',
-                }}
-              >
-                {profile.bio}
-              </p>
+              <p className="profile-bio">{profile.bio}</p>
             )}
 
-            <div
-              style={{
-                display: 'flex',
-                gap: '20px',
-                fontFamily: fonts.body,
-                fontSize: '12px',
-                color: colors.dimText,
-              }}
-            >
+            <div className="profile-stats">
               <span>
-                <strong style={{ color: colors.parchment }}>
+                <strong className="profile-stats__count">
                   {profile.followers_count ?? 0}
                 </strong>{' '}
                 Followers
               </span>
               <span>
-                <strong style={{ color: colors.parchment }}>
+                <strong className="profile-stats__count">
                   {profile.following_count ?? 0}
                 </strong>{' '}
                 Following
@@ -196,41 +139,20 @@ export default function ProfilePage() {
         </div>
       </PixelCard>
 
-      {/* Posts */}
-      <h3
-        style={{
-          fontFamily: fonts.heading,
-          fontSize: '11px',
-          color: colors.treasureGold,
-        }}
-      >
-        ⚔ Tales & Scrolls
+      <h3 className="page-title" style={{ marginBottom: 4 }}>
+        <SwordIcon size={16} />
+        Tales & Scrolls
       </h3>
 
       {postsLoading && (
-        <div
-          style={{
-            fontFamily: fonts.body,
-            fontSize: '12px',
-            color: colors.dimText,
-            textAlign: 'center',
-            padding: '20px',
-          }}
-        >
-          Loading posts...
-        </div>
+        <>
+          <PostCardSkeleton />
+          <PostCardSkeleton />
+        </>
       )}
 
       {!postsLoading && posts.length === 0 && (
-        <div
-          style={{
-            fontFamily: fonts.body,
-            fontSize: '13px',
-            color: colors.dimText,
-            textAlign: 'center',
-            padding: '30px',
-          }}
-        >
+        <div className="empty-state">
           This adventurer has not yet written any tales.
         </div>
       )}

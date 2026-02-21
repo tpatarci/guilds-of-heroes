@@ -1,20 +1,20 @@
 // Retro RPG Theme Constants
 export const colors = {
   dungeonBlack: '#1a1a2e',
-  stoneGray: '#16213e',
+  stoneGray: '#1c2951',
   treasureGold: '#e2b714',
   dragonRed: '#c0392b',
   potionGreen: '#27ae60',
-  parchment: '#f5f0e1',
+  parchment: '#f0ebe0',
   darkPurple: '#0f3460',
   lightGold: '#f7dc6f',
-  dimText: '#8e8e9e',
+  dimText: '#9ca3af',
   white: '#ffffff',
 } as const;
 
 export const fonts = {
   heading: "'Press Start 2P', cursive",
-  body: "'Courier New', monospace",
+  body: "'JetBrains Mono', 'Fira Code', monospace",
 } as const;
 
 export const spacing = {

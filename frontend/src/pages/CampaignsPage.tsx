@@ -4,7 +4,9 @@ import { useAuth } from '../hooks/useAuth';
 import { PixelButton } from '../components/common/PixelButton';
 import { PixelCard } from '../components/common/PixelCard';
 import { PixelInput, PixelTextarea } from '../components/common/PixelInput';
-import { colors, fonts } from '../styles/theme';
+import { CampaignIcon } from '../components/common/Icons';
+import { EventCardSkeleton } from '../components/common/Skeleton';
+import { colors } from '../styles/theme';
 import type { Campaign } from '../types';
 
 const STATUS_COLORS: Record<string, string> = {
@@ -24,7 +26,6 @@ export default function CampaignsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [joiningId, setJoiningId] = useState<number | null>(null);
 
-  // Form state
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [maxPlayers, setMaxPlayers] = useState('6');
@@ -84,23 +85,11 @@ export default function CampaignsPage() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '8px',
-        }}
-      >
-        <h2
-          style={{
-            fontFamily: fonts.heading,
-            fontSize: '14px',
-            color: colors.treasureGold,
-          }}
-        >
-          ⚔ Campaign Hall
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div className="page-header">
+        <h2 className="page-title">
+          <CampaignIcon size={18} />
+          Campaign Hall
         </h2>
         {user && (
           <PixelButton
@@ -113,23 +102,10 @@ export default function CampaignsPage() {
         )}
       </div>
 
-      {/* Create campaign form */}
       {showForm && (
-        <PixelCard>
-          <h3
-            style={{
-              fontFamily: fonts.heading,
-              fontSize: '11px',
-              color: colors.treasureGold,
-              marginBottom: '16px',
-            }}
-          >
-            Start a New Campaign
-          </h3>
-          <form
-            onSubmit={handleCreateCampaign}
-            style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
-          >
+        <PixelCard static>
+          <h3 style={{ marginBottom: 16 }}>Start a New Campaign</h3>
+          <form onSubmit={handleCreateCampaign} className="form-group">
             <PixelInput
               label="Campaign Name"
               value={name}
@@ -153,19 +129,9 @@ export default function CampaignsPage() {
               max={10}
             />
 
-            {formError && (
-              <div
-                style={{
-                  fontFamily: fonts.body,
-                  fontSize: '12px',
-                  color: colors.dragonRed,
-                }}
-              >
-                {formError}
-              </div>
-            )}
+            {formError && <div className="error-banner">{formError}</div>}
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+            <div className="form-actions">
               <PixelButton
                 type="button"
                 variant="red"
@@ -187,45 +153,17 @@ export default function CampaignsPage() {
         </PixelCard>
       )}
 
-      {error && (
-        <div
-          style={{
-            fontFamily: fonts.body,
-            fontSize: '13px',
-            color: colors.dragonRed,
-            padding: '12px',
-            border: `1px solid ${colors.dragonRed}`,
-          }}
-        >
-          {error}
-        </div>
-      )}
+      {error && <div className="error-banner">{error}</div>}
 
       {isLoading && (
-        <div
-          style={{
-            fontFamily: fonts.heading,
-            fontSize: '10px',
-            color: colors.dimText,
-            textAlign: 'center',
-            padding: '40px',
-          }}
-        >
-          Unfurling the campaign map...
-        </div>
+        <>
+          <EventCardSkeleton />
+          <EventCardSkeleton />
+        </>
       )}
 
       {!isLoading && campaigns.length === 0 && !error && (
-        <div
-          style={{
-            fontFamily: fonts.body,
-            fontSize: '14px',
-            color: colors.dimText,
-            textAlign: 'center',
-            padding: '40px',
-            lineHeight: '2',
-          }}
-        >
+        <div className="empty-state">
           No campaigns found.<br />
           Be the first Dungeon Master to start one!
         </div>
@@ -233,33 +171,14 @@ export default function CampaignsPage() {
 
       {campaigns.map((campaign) => (
         <PixelCard key={campaign.id}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              marginBottom: '12px',
-            }}
-          >
-            <div style={{ flex: 1 }}>
-              <h3
-                style={{
-                  fontFamily: fonts.heading,
-                  fontSize: '12px',
-                  color: colors.treasureGold,
-                  marginBottom: '6px',
-                }}
-              >
-                {campaign.name}
-              </h3>
+          <div className="event-card__header">
+            <div className="flex-1">
+              <h3 className="event-card__title">{campaign.name}</h3>
               <span
+                className="badge"
                 style={{
-                  fontFamily: fonts.heading,
-                  fontSize: '7px',
-                  color: colors.dungeonBlack,
                   background: STATUS_COLORS[campaign.status] || colors.dimText,
-                  padding: '2px 8px',
-                  textTransform: 'uppercase',
+                  color: colors.dungeonBlack,
                 }}
               >
                 {campaign.status}
@@ -278,50 +197,21 @@ export default function CampaignsPage() {
             )}
 
             {user && campaign.dm_id === user.id && (
-              <span
-                style={{
-                  fontFamily: fonts.heading,
-                  fontSize: '7px',
-                  color: colors.dungeonBlack,
-                  background: colors.dragonRed,
-                  padding: '2px 8px',
-                  textTransform: 'uppercase',
-                }}
-              >
-                DM
-              </span>
+              <span className="badge badge--red">DM</span>
             )}
           </div>
 
           {campaign.description && (
-            <p
-              style={{
-                fontFamily: fonts.body,
-                fontSize: '13px',
-                color: colors.parchment,
-                lineHeight: '1.6',
-                marginBottom: '12px',
-              }}
-            >
-              {campaign.description}
-            </p>
+            <p className="event-card__description">{campaign.description}</p>
           )}
 
-          <div
-            style={{
-              display: 'flex',
-              gap: '20px',
-              fontFamily: fonts.body,
-              fontSize: '12px',
-              color: colors.dimText,
-            }}
-          >
+          <div className="campaign-details">
             <span>
-              <span style={{ color: colors.treasureGold }}>DM: </span>
+              <span className="campaign-details__key">DM: </span>
               {campaign.dm_username}
             </span>
             <span>
-              <span style={{ color: colors.treasureGold }}>Players: </span>
+              <span className="campaign-details__key">Players: </span>
               {campaign.member_count ?? 0}/{campaign.max_players}
             </span>
           </div>

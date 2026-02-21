@@ -1,36 +1,35 @@
 import type { CSSProperties, ReactNode } from 'react';
-import { colors } from '../../styles/theme';
 
 interface PixelCardProps {
   children: ReactNode;
   variant?: 'gold' | 'red' | 'green';
   style?: CSSProperties;
   className?: string;
+  static?: boolean;
 }
+
+const borderClassMap = {
+  gold: 'pixel-border',
+  red: 'pixel-border-red',
+  green: 'pixel-border-green',
+};
 
 export function PixelCard({
   children,
   variant = 'gold',
   style,
   className = '',
+  static: isStatic = false,
 }: PixelCardProps) {
-  const borderClass =
-    variant === 'red'
-      ? 'pixel-border-red'
-      : variant === 'green'
-        ? 'pixel-border-green'
-        : 'pixel-border';
+  const classes = [
+    'pixel-card',
+    borderClassMap[variant],
+    isStatic ? 'pixel-card--static' : '',
+    className,
+  ].filter(Boolean).join(' ');
 
   return (
-    <div
-      className={`${borderClass} ${className}`}
-      style={{
-        background: colors.stoneGray,
-        padding: '20px',
-        marginBottom: '16px',
-        ...style,
-      }}
-    >
+    <div className={classes} style={style}>
       {children}
     </div>
   );

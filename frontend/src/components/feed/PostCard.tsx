@@ -1,11 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { Post } from '../../types';
-import { colors, fonts } from '../../styles/theme';
 import { PixelCard } from '../common/PixelCard';
-
-interface PostCardProps {
-  post: Post;
-}
 
 function timeAgo(dateString: string): string {
   const now = new Date();
@@ -19,113 +14,43 @@ function timeAgo(dateString: string): string {
   return date.toLocaleDateString();
 }
 
+interface PostCardProps {
+  post: Post;
+}
+
 export function PostCard({ post }: PostCardProps) {
   return (
     <PixelCard>
-      {/* Author header */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          marginBottom: '12px',
-        }}
-      >
-        {/* Avatar placeholder */}
-        <div
-          style={{
-            width: '36px',
-            height: '36px',
-            background: colors.darkPurple,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontFamily: fonts.heading,
-            fontSize: '14px',
-            color: colors.treasureGold,
-            flexShrink: 0,
-          }}
-          className="pixel-border"
-        >
+      <div className="post-card__header">
+        <div className="post-card__avatar pixel-border">
           {post.author.display_name?.[0]?.toUpperCase() ||
             post.author.username[0].toUpperCase()}
         </div>
 
-        <div style={{ flex: 1 }}>
-          <Link
-            to={`/profile/${post.author_id}`}
-            style={{
-              fontFamily: fonts.heading,
-              fontSize: '10px',
-              color: colors.lightGold,
-              textDecoration: 'none',
-            }}
-          >
+        <div className="flex-1">
+          <Link to={`/profile/${post.author_id}`} className="post-card__author-name">
             {post.author.display_name || post.author.username}
           </Link>
-          <div
-            style={{
-              fontFamily: fonts.body,
-              fontSize: '11px',
-              color: colors.dimText,
-            }}
-          >
-            @{post.author.username}
-          </div>
+          <div className="post-card__username">@{post.author.username}</div>
         </div>
 
-        <span
-          style={{
-            fontFamily: fonts.body,
-            fontSize: '11px',
-            color: colors.dimText,
-          }}
-        >
-          {timeAgo(post.created_at)}
-        </span>
+        <span className="post-card__time">{timeAgo(post.created_at)}</span>
       </div>
 
-      {/* Post content */}
-      <div
-        style={{
-          fontFamily: fonts.body,
-          fontSize: '14px',
-          color: colors.parchment,
-          lineHeight: '1.6',
-          whiteSpace: 'pre-wrap',
-          wordBreak: 'break-word',
-        }}
-      >
-        {post.content}
-      </div>
+      <div className="post-card__content">{post.content}</div>
 
-      {/* Post image */}
       {post.image_url && (
         <img
           src={post.image_url}
           alt="Post attachment"
-          style={{
-            maxWidth: '100%',
-            marginTop: '12px',
-            border: `2px solid ${colors.treasureGold}`,
-          }}
+          className="post-card__image"
         />
       )}
 
-      {/* Post type badge */}
       {post.post_type && post.post_type !== 'text' && (
-        <div style={{ marginTop: '10px' }}>
-          <span
-            style={{
-              fontFamily: fonts.heading,
-              fontSize: '7px',
-              color: colors.dungeonBlack,
-              background: colors.treasureGold,
-              padding: '3px 8px',
-              textTransform: 'uppercase',
-            }}
-          >
-            {post.post_type}
+        <div style={{ marginTop: 10 }}>
+          <span className="badge badge--gold">
+            {post.post_type.replace(/_/g, ' ')}
           </span>
         </div>
       )}

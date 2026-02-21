@@ -2,8 +2,9 @@ import { useFeed } from '../hooks/useFeed';
 import { useAuth } from '../hooks/useAuth';
 import { PostComposer } from '../components/feed/PostComposer';
 import { PostCard } from '../components/feed/PostCard';
-import { colors, fonts } from '../styles/theme';
 import { PixelButton } from '../components/common/PixelButton';
+import { PostCardSkeleton } from '../components/common/Skeleton';
+import { SwordIcon } from '../components/common/Icons';
 
 export default function FeedPage() {
   const { user } = useAuth();
@@ -12,60 +13,28 @@ export default function FeedPage() {
   });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <h2
-        style={{
-          fontFamily: fonts.heading,
-          fontSize: '14px',
-          color: colors.treasureGold,
-          marginBottom: '8px',
-        }}
-      >
-        ⚔ The Tavern Board
-      </h2>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div className="page-header">
+        <h2 className="page-title">
+          <SwordIcon size={18} />
+          The Tavern Board
+        </h2>
+      </div>
 
       {user && <PostComposer onPostCreated={refresh} />}
 
-      {error && (
-        <div
-          style={{
-            fontFamily: fonts.body,
-            fontSize: '13px',
-            color: colors.dragonRed,
-            padding: '12px',
-            border: `1px solid ${colors.dragonRed}`,
-            background: 'rgba(192, 57, 43, 0.1)',
-          }}
-        >
-          {error}
-        </div>
-      )}
+      {error && <div className="error-banner">{error}</div>}
 
       {isLoading && posts.length === 0 && (
-        <div
-          style={{
-            fontFamily: fonts.heading,
-            fontSize: '10px',
-            color: colors.dimText,
-            textAlign: 'center',
-            padding: '40px',
-          }}
-        >
-          Loading scrolls...
-        </div>
+        <>
+          <PostCardSkeleton />
+          <PostCardSkeleton />
+          <PostCardSkeleton />
+        </>
       )}
 
       {!isLoading && posts.length === 0 && !error && (
-        <div
-          style={{
-            fontFamily: fonts.body,
-            fontSize: '14px',
-            color: colors.dimText,
-            textAlign: 'center',
-            padding: '40px',
-            lineHeight: '2',
-          }}
-        >
+        <div className="empty-state">
           The tavern board is empty.<br />
           Follow other adventurers to see their tales here.
         </div>
@@ -76,7 +45,7 @@ export default function FeedPage() {
       ))}
 
       {hasMore && posts.length > 0 && (
-        <div style={{ textAlign: 'center', padding: '16px' }}>
+        <div className="text-center" style={{ padding: 16 }}>
           <PixelButton onClick={loadMore} disabled={isLoading} variant="gold">
             {isLoading ? 'Loading...' : 'Load More Tales'}
           </PixelButton>

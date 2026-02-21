@@ -12,27 +12,14 @@ import CampaignsPage from './pages/CampaignsPage';
 import DicePage from './pages/DicePage';
 import NotFoundPage from './pages/NotFoundPage';
 
-import './styles/pixel.css';
-
 /** Guard: redirect unauthenticated users to /login */
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minHeight: '100vh',
-          fontFamily: "'Press Start 2P', cursive",
-          fontSize: '12px',
-          color: '#e2b714',
-          background: '#1a1a2e',
-        }}
-      >
-        Loading...
+      <div className="login-page">
+        <div className="loading-state">Loading...</div>
       </div>
     );
   }

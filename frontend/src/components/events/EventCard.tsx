@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import * as apiClient from '../../api/client';
 import type { Event } from '../../types';
-import { colors, fonts } from '../../styles/theme';
+import { colors } from '../../styles/theme';
 import { PixelButton } from '../common/PixelButton';
 import { PixelCard } from '../common/PixelCard';
 
@@ -47,63 +47,23 @@ export function EventCard({ event, onRsvp }: EventCardProps) {
 
   return (
     <PixelCard>
-      {/* Header row */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          marginBottom: '12px',
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          <h3
-            style={{
-              fontFamily: fonts.heading,
-              fontSize: '11px',
-              color: colors.treasureGold,
-              marginBottom: '6px',
-            }}
-          >
-            {event.title}
-          </h3>
+      <div className="event-card__header">
+        <div className="flex-1">
+          <h3 className="event-card__title">{event.title}</h3>
           <span
-            style={{
-              fontFamily: fonts.heading,
-              fontSize: '7px',
-              color: colors.dungeonBlack,
-              background: typeColor,
-              padding: '2px 8px',
-              textTransform: 'uppercase',
-            }}
+            className="badge"
+            style={{ background: typeColor, color: colors.dungeonBlack }}
           >
             {event.event_type.replace('_', ' ')}
           </span>
         </div>
 
-        <div
-          style={{
-            textAlign: 'right',
-            flexShrink: 0,
-          }}
-        >
+        <div style={{ textAlign: 'right', flexShrink: 0 }}>
+          <div className="event-card__status-label">Status</div>
           <div
+            className="event-card__status-value"
             style={{
-              fontFamily: fonts.heading,
-              fontSize: '8px',
-              color: colors.dimText,
-              textTransform: 'uppercase',
-            }}
-          >
-            Status
-          </div>
-          <div
-            style={{
-              fontFamily: fonts.heading,
-              fontSize: '10px',
-              color:
-                event.status === 'open' ? colors.potionGreen : colors.dimText,
-              textTransform: 'uppercase',
+              color: event.status === 'open' ? colors.potionGreen : colors.dimText,
             }}
           >
             {event.status}
@@ -111,54 +71,31 @@ export function EventCard({ event, onRsvp }: EventCardProps) {
         </div>
       </div>
 
-      {/* Description */}
       {event.description && (
-        <p
-          style={{
-            fontFamily: fonts.body,
-            fontSize: '13px',
-            color: colors.parchment,
-            lineHeight: '1.6',
-            marginBottom: '12px',
-          }}
-        >
-          {event.description}
-        </p>
+        <p className="event-card__description">{event.description}</p>
       )}
 
-      {/* Details row */}
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '16px',
-          marginBottom: '12px',
-          fontFamily: fonts.body,
-          fontSize: '12px',
-          color: colors.dimText,
-        }}
-      >
+      <div className="event-card__details">
         <div>
-          <span style={{ color: colors.treasureGold }}>When: </span>
+          <span className="event-card__detail-key">When: </span>
           {formatDateTime(event.start_time)}
         </div>
         {event.location && (
           <div>
-            <span style={{ color: colors.treasureGold }}>Where: </span>
+            <span className="event-card__detail-key">Where: </span>
             {event.location}
           </div>
         )}
         <div>
-          <span style={{ color: colors.treasureGold }}>Players: </span>
+          <span className="event-card__detail-key">Players: </span>
           {event.going_count ?? 0}/{event.max_players ?? event.min_players}+
         </div>
         <div>
-          <span style={{ color: colors.treasureGold }}>Organizer: </span>
+          <span className="event-card__detail-key">Organizer: </span>
           {event.organizer_username}
         </div>
       </div>
 
-      {/* RSVP button */}
       {event.status === 'open' && (
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <PixelButton

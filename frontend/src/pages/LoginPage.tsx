@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { colors, fonts } from '../styles/theme';
 import { PixelButton } from '../components/common/PixelButton';
 import { PixelCard } from '../components/common/PixelCard';
 import { PixelInput } from '../components/common/PixelInput';
@@ -51,52 +50,13 @@ export function LoginPage() {
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        background: colors.dungeonBlack,
-        padding: '24px',
-      }}
-    >
-      {/* Title */}
-      <h1
-        style={{
-          fontFamily: fonts.heading,
-          fontSize: '32px',
-          color: colors.treasureGold,
-          marginBottom: '8px',
-          textShadow: `0 0 20px ${colors.treasureGold}, 0 0 40px rgba(226, 183, 20, 0.3)`,
-        }}
-      >
-        GOH
-      </h1>
-      <p
-        style={{
-          fontFamily: fonts.heading,
-          fontSize: '10px',
-          color: colors.dimText,
-          marginBottom: '32px',
-          textAlign: 'center',
-        }}
-      >
-        Guilds of Heroes
-      </p>
+    <div className="login-page">
+      <h1 className="login-title">GOH</h1>
+      <p className="login-subtitle">Guilds of Heroes</p>
 
-      <div style={{ width: '100%', maxWidth: '400px' }}>
-        <PixelCard>
-          <h2
-            style={{
-              fontFamily: fonts.heading,
-              fontSize: '14px',
-              color: colors.treasureGold,
-              marginBottom: '24px',
-              textAlign: 'center',
-            }}
-          >
+      <div className="login-form">
+        <PixelCard static>
+          <h2 className="login-form__title">
             {isRegister ? 'Create Character' : 'Enter the Realm'}
           </h2>
 
@@ -144,26 +104,13 @@ export function LoginPage() {
             />
 
             {error && (
-              <div
-                style={{
-                  fontFamily: fonts.body,
-                  fontSize: '12px',
-                  color: colors.dragonRed,
-                  marginBottom: '16px',
-                  textAlign: 'center',
-                  padding: '8px',
-                  background: 'rgba(192, 57, 43, 0.1)',
-                }}
-                className="pixel-border-red"
-              >
-                {error}
-              </div>
+              <div className="error-message pixel-border-red">{error}</div>
             )}
 
             <PixelButton
               type="submit"
               disabled={isLoading}
-              style={{ width: '100%', marginBottom: '16px' }}
+              style={{ width: '100%', marginBottom: 16 }}
             >
               {isLoading
                 ? 'Loading...'
@@ -173,21 +120,13 @@ export function LoginPage() {
             </PixelButton>
           </form>
 
-          <div style={{ textAlign: 'center' }}>
+          <div className="text-center">
             <button
               onClick={() => {
                 setIsRegister(!isRegister);
                 setError(null);
               }}
-              style={{
-                background: 'none',
-                border: 'none',
-                fontFamily: fonts.body,
-                fontSize: '12px',
-                color: colors.lightGold,
-                cursor: 'pointer',
-                textDecoration: 'underline',
-              }}
+              className="login-form__toggle"
             >
               {isRegister
                 ? 'Already have an account? Login'
@@ -197,18 +136,7 @@ export function LoginPage() {
         </PixelCard>
       </div>
 
-      {/* Flavor text */}
-      <p
-        style={{
-          fontFamily: fonts.body,
-          fontSize: '11px',
-          color: colors.dimText,
-          marginTop: '24px',
-          textAlign: 'center',
-          maxWidth: '400px',
-          lineHeight: '1.6',
-        }}
-      >
+      <p className="login-flavor">
         "Many brave adventurers have gathered here before you. Enter the realm
         and find your guild."
       </p>

@@ -1,125 +1,81 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { colors, fonts } from '../../styles/theme';
 import { NotificationBell } from '../notifications/NotificationBell';
+import { SwordIcon, ScrollIcon, ShieldIcon, DiceIcon, CampaignIcon, MenuIcon, CloseIcon } from '../common/Icons';
 
 export function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
+  const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(path + '/');
 
   return (
-    <nav
-      className="pixel-border"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '12px 24px',
-        background: colors.stoneGray,
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
-      }}
-    >
-      {/* Logo + Title */}
-      <Link
-        to="/"
-        style={{
-          fontFamily: fonts.heading,
-          fontSize: '20px',
-          color: colors.treasureGold,
-          textDecoration: 'none',
-          textShadow: `0 0 10px ${colors.treasureGold}, 0 0 20px rgba(226, 183, 20, 0.3)`,
-        }}
-      >
-        GOH
-      </Link>
+    <nav className="navbar">
+      <Link to="/" className="navbar__logo">GOH</Link>
 
-      {/* Navigation links */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '20px',
-        }}
+      <button
+        className="navbar__menu-toggle"
+        onClick={() => setMenuOpen(!menuOpen)}
+        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
       >
-        <NavLink to="/">Feed</NavLink>
-        <NavLink to="/events">Events</NavLink>
-        <NavLink to="/characters">Characters</NavLink>
-        <NavLink to="/campaigns">Campaigns</NavLink>
-        <NavLink to="/dice">Dice</NavLink>
+        {menuOpen ? <CloseIcon size={18} /> : <MenuIcon size={18} />}
+      </button>
+
+      <div className={`navbar__links ${menuOpen ? 'navbar__links--open' : ''}`}>
+        <NavLink to="/feed" active={isActive('/feed')} onClick={() => setMenuOpen(false)}>
+          <SwordIcon size={14} /> Feed
+        </NavLink>
+        <NavLink to="/events" active={isActive('/events')} onClick={() => setMenuOpen(false)}>
+          <ScrollIcon size={14} /> Events
+        </NavLink>
+        <NavLink to="/characters" active={isActive('/characters')} onClick={() => setMenuOpen(false)}>
+          <ShieldIcon size={14} /> Characters
+        </NavLink>
+        <NavLink to="/campaigns" active={isActive('/campaigns')} onClick={() => setMenuOpen(false)}>
+          <CampaignIcon size={14} /> Campaigns
+        </NavLink>
+        <NavLink to="/dice" active={isActive('/dice')} onClick={() => setMenuOpen(false)}>
+          <DiceIcon size={14} /> Dice
+        </NavLink>
       </div>
 
-      {/* Auth area */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      <div className="navbar__auth">
         {isAuthenticated ? (
           <>
             <NotificationBell />
-            <Link
-              to={`/profile/${user?.id}`}
-              style={{
-                fontFamily: fonts.body,
-                fontSize: '14px',
-                color: colors.lightGold,
-                textDecoration: 'none',
-              }}
-            >
+            <Link to={`/profile/${user?.id}`} className="navbar__user">
               {user?.display_name || user?.username}
             </Link>
-            <button
-              onClick={logout}
-              style={{
-                background: 'none',
-                border: `1px solid ${colors.dragonRed}`,
-                color: colors.dragonRed,
-                fontFamily: fonts.heading,
-                fontSize: '8px',
-                padding: '6px 12px',
-                cursor: 'pointer',
-                textTransform: 'uppercase',
-              }}
-            >
+            <button onClick={logout} className="navbar__logout">
               Logout
             </button>
           </>
         ) : (
-          <Link
-            to="/login"
-            style={{
-              fontFamily: fonts.heading,
-              fontSize: '10px',
-              color: colors.treasureGold,
-              textDecoration: 'none',
-              border: `1px solid ${colors.treasureGold}`,
-              padding: '6px 16px',
-            }}
-          >
-            Enter
-          </Link>
+          <Link to="/login" className="navbar__enter">Enter</Link>
         )}
       </div>
     </nav>
   );
 }
 
-function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
+function NavLink({
+  to,
+  active,
+  children,
+  onClick,
+}: {
+  to: string;
+  active: boolean;
+  children: React.ReactNode;
+  onClick: () => void;
+}) {
   return (
     <Link
       to={to}
-      style={{
-        fontFamily: fonts.heading,
-        fontSize: '9px',
-        color: colors.parchment,
-        textDecoration: 'none',
-        textTransform: 'uppercase',
-        letterSpacing: '1px',
-        transition: 'color 0.2s',
-      }}
-      onMouseEnter={(e) => {
-        (e.target as HTMLElement).style.color = colors.treasureGold;
-      }}
-      onMouseLeave={(e) => {
-        (e.target as HTMLElement).style.color = colors.parchment;
-      }}
+      className={`navbar__link ${active ? 'navbar__link--active' : ''}`}
+      onClick={onClick}
     >
       {children}
     </Link>

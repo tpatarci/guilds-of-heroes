@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import * as apiClient from '../../api/client';
-import { colors, fonts } from '../../styles/theme';
 import { PixelButton } from '../common/PixelButton';
 import { PixelCard } from '../common/PixelCard';
 
@@ -35,70 +34,24 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
   };
 
   return (
-    <PixelCard>
-      <h3
-        style={{
-          fontFamily: fonts.heading,
-          fontSize: '11px',
-          color: colors.treasureGold,
-          marginBottom: '12px',
-        }}
-      >
-        Share Your Tale
-      </h3>
+    <PixelCard static>
+      <h3 style={{ marginBottom: 12 }}>Share Your Tale</h3>
 
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="What adventures await, hero?"
-        className="pixel-border"
-        style={{
-          width: '100%',
-          minHeight: '100px',
-          background: colors.dungeonBlack,
-          color: colors.parchment,
-          fontFamily: fonts.body,
-          fontSize: '14px',
-          padding: '12px',
-          border: 'none',
-          outline: 'none',
-          resize: 'vertical',
-          marginBottom: '12px',
-        }}
+        className="post-composer__textarea pixel-border"
       />
 
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '12px',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <label
-            style={{
-              fontFamily: fonts.heading,
-              fontSize: '8px',
-              color: colors.dimText,
-              textTransform: 'uppercase',
-            }}
-          >
-            Type:
-          </label>
+      <div className="post-composer__footer">
+        <div className="post-composer__type">
+          <span className="post-composer__type-label">Type:</span>
           <select
             value={postType}
             onChange={(e) => setPostType(e.target.value)}
-            style={{
-              background: colors.dungeonBlack,
-              color: colors.parchment,
-              fontFamily: fonts.body,
-              fontSize: '12px',
-              padding: '4px 8px',
-              border: `1px solid ${colors.treasureGold}`,
-              outline: 'none',
-              cursor: 'pointer',
-            }}
+            className="pixel-select"
+            style={{ width: 'auto' }}
           >
             <option value="text">Text</option>
             <option value="adventure_log">Adventure Log</option>
@@ -107,18 +60,8 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
           </select>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          {error && (
-            <span
-              style={{
-                fontFamily: fonts.body,
-                fontSize: '11px',
-                color: colors.dragonRed,
-              }}
-            >
-              {error}
-            </span>
-          )}
+        <div className="post-composer__actions">
+          {error && <span className="text-red">{error}</span>}
           <PixelButton
             onClick={handleSubmit}
             disabled={isSubmitting || !content.trim()}

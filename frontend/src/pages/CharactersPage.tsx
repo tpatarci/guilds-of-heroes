@@ -4,7 +4,8 @@ import { CharacterCard } from '../components/characters/CharacterCard';
 import { PixelButton } from '../components/common/PixelButton';
 import { PixelCard } from '../components/common/PixelCard';
 import { PixelInput, PixelTextarea } from '../components/common/PixelInput';
-import { colors, fonts } from '../styles/theme';
+import { ShieldIcon } from '../components/common/Icons';
+import { CharacterCardSkeleton } from '../components/common/Skeleton';
 import type { Character } from '../types';
 
 const D20_RACES = [
@@ -26,7 +27,6 @@ export default function CharactersPage() {
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Form state
   const [name, setName] = useState('');
   const [race, setRace] = useState('Human');
   const [charClass, setCharClass] = useState('Fighter');
@@ -92,63 +92,12 @@ export default function CharactersPage() {
     }
   }
 
-  const statField = (
-    label: string,
-    value: string,
-    setter: (v: string) => void,
-  ) => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-      <label
-        style={{
-          fontFamily: fonts.heading,
-          fontSize: '7px',
-          color: colors.dimText,
-          textAlign: 'center',
-          textTransform: 'uppercase',
-        }}
-      >
-        {label}
-      </label>
-      <input
-        type="number"
-        value={value}
-        min={1}
-        max={30}
-        onChange={(e) => setter(e.target.value)}
-        className="pixel-border"
-        style={{
-          width: '60px',
-          background: colors.dungeonBlack,
-          color: colors.parchment,
-          fontFamily: fonts.heading,
-          fontSize: '14px',
-          padding: '6px',
-          border: 'none',
-          outline: 'none',
-          textAlign: 'center',
-        }}
-      />
-    </div>
-  );
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '8px',
-        }}
-      >
-        <h2
-          style={{
-            fontFamily: fonts.heading,
-            fontSize: '14px',
-            color: colors.treasureGold,
-          }}
-        >
-          🧙 Character Vault
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div className="page-header">
+        <h2 className="page-title">
+          <ShieldIcon size={18} />
+          Character Vault
         </h2>
         <PixelButton
           variant="green"
@@ -159,23 +108,10 @@ export default function CharactersPage() {
         </PixelButton>
       </div>
 
-      {/* Create character form */}
       {showForm && (
-        <PixelCard>
-          <h3
-            style={{
-              fontFamily: fonts.heading,
-              fontSize: '11px',
-              color: colors.treasureGold,
-              marginBottom: '16px',
-            }}
-          >
-            Create Character
-          </h3>
-          <form
-            onSubmit={handleCreate}
-            style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
-          >
+        <PixelCard static>
+          <h3 style={{ marginBottom: 16 }}>Create Character</h3>
+          <form onSubmit={handleCreate} className="form-group">
             <PixelInput
               label="Character Name"
               value={name}
@@ -184,70 +120,32 @@ export default function CharactersPage() {
               required
             />
 
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <div style={{ flex: 1 }}>
-                <label
-                  style={{
-                    display: 'block',
-                    fontFamily: fonts.heading,
-                    fontSize: '8px',
-                    color: colors.treasureGold,
-                    marginBottom: '6px',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  Race
-                </label>
+            <div className="form-row">
+              <div>
+                <label className="pixel-input__label">Race</label>
                 <select
                   value={race}
                   onChange={(e) => setRace(e.target.value)}
-                  style={{
-                    width: '100%',
-                    background: colors.dungeonBlack,
-                    color: colors.parchment,
-                    border: `1px solid ${colors.stoneGray}`,
-                    padding: '8px 12px',
-                    fontFamily: fonts.body,
-                    fontSize: '13px',
-                  }}
+                  className="pixel-select"
                 >
                   {D20_RACES.map((r) => (
                     <option key={r} value={r}>{r}</option>
                   ))}
                 </select>
               </div>
-              <div style={{ flex: 1 }}>
-                <label
-                  style={{
-                    display: 'block',
-                    fontFamily: fonts.heading,
-                    fontSize: '8px',
-                    color: colors.treasureGold,
-                    marginBottom: '6px',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  Class
-                </label>
+              <div>
+                <label className="pixel-input__label">Class</label>
                 <select
                   value={charClass}
                   onChange={(e) => setCharClass(e.target.value)}
-                  style={{
-                    width: '100%',
-                    background: colors.dungeonBlack,
-                    color: colors.parchment,
-                    border: `1px solid ${colors.stoneGray}`,
-                    padding: '8px 12px',
-                    fontFamily: fonts.body,
-                    fontSize: '13px',
-                  }}
+                  className="pixel-select"
                 >
                   {D20_CLASSES.map((c) => (
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
               </div>
-              <div style={{ width: '80px' }}>
+              <div style={{ maxWidth: 80 }}>
                 <PixelInput
                   label="Level"
                   type="number"
@@ -259,31 +157,20 @@ export default function CharactersPage() {
               </div>
             </div>
 
-            {/* Ability scores */}
             <div>
-              <div
-                style={{
-                  fontFamily: fonts.heading,
-                  fontSize: '8px',
-                  color: colors.treasureGold,
-                  marginBottom: '10px',
-                  textTransform: 'uppercase',
-                }}
-              >
-                Ability Scores
-              </div>
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                {statField('STR', str, setStr)}
-                {statField('DEX', dex, setDex)}
-                {statField('CON', con, setCon)}
-                {statField('INT', int, setInt)}
-                {statField('WIS', wis, setWis)}
-                {statField('CHA', cha, setCha)}
+              <label className="pixel-input__label">Ability Scores</label>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <StatInput label="STR" value={str} onChange={setStr} />
+                <StatInput label="DEX" value={dex} onChange={setDex} />
+                <StatInput label="CON" value={con} onChange={setCon} />
+                <StatInput label="INT" value={int} onChange={setInt} />
+                <StatInput label="WIS" value={wis} onChange={setWis} />
+                <StatInput label="CHA" value={cha} onChange={setCha} />
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <div style={{ width: '100px' }}>
+            <div className="form-row">
+              <div style={{ maxWidth: 100 }}>
                 <PixelInput
                   label="HP"
                   type="number"
@@ -292,7 +179,7 @@ export default function CharactersPage() {
                   min={1}
                 />
               </div>
-              <div style={{ width: '100px' }}>
+              <div style={{ maxWidth: 100 }}>
                 <PixelInput
                   label="Armor Class"
                   type="number"
@@ -311,19 +198,9 @@ export default function CharactersPage() {
               rows={3}
             />
 
-            {formError && (
-              <div
-                style={{
-                  fontFamily: fonts.body,
-                  fontSize: '12px',
-                  color: colors.dragonRed,
-                }}
-              >
-                {formError}
-              </div>
-            )}
+            {formError && <div className="error-banner">{formError}</div>}
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+            <div className="form-actions">
               <PixelButton
                 type="button"
                 variant="red"
@@ -345,45 +222,17 @@ export default function CharactersPage() {
         </PixelCard>
       )}
 
-      {error && (
-        <div
-          style={{
-            fontFamily: fonts.body,
-            fontSize: '13px',
-            color: colors.dragonRed,
-            padding: '12px',
-            border: `1px solid ${colors.dragonRed}`,
-          }}
-        >
-          {error}
-        </div>
-      )}
+      {error && <div className="error-banner">{error}</div>}
 
       {isLoading && (
-        <div
-          style={{
-            fontFamily: fonts.heading,
-            fontSize: '10px',
-            color: colors.dimText,
-            textAlign: 'center',
-            padding: '40px',
-          }}
-        >
-          Summoning characters...
-        </div>
+        <>
+          <CharacterCardSkeleton />
+          <CharacterCardSkeleton />
+        </>
       )}
 
       {!isLoading && characters.length === 0 && !error && (
-        <div
-          style={{
-            fontFamily: fonts.body,
-            fontSize: '14px',
-            color: colors.dimText,
-            textAlign: 'center',
-            padding: '40px',
-            lineHeight: '2',
-          }}
-        >
+        <div className="empty-state">
           No characters yet.<br />
           Roll for initiative and create your first hero!
         </div>
@@ -392,6 +241,30 @@ export default function CharactersPage() {
       {characters.map((character) => (
         <CharacterCard key={character.id} character={character} />
       ))}
+    </div>
+  );
+}
+
+function StatInput({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div className="stat-input">
+      <label className="stat-input__label">{label}</label>
+      <input
+        type="number"
+        value={value}
+        min={1}
+        max={30}
+        onChange={(e) => onChange(e.target.value)}
+        className="stat-input__field pixel-border"
+      />
     </div>
   );
 }

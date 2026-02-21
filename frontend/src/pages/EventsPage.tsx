@@ -5,7 +5,8 @@ import { EventCard } from '../components/events/EventCard';
 import { PixelButton } from '../components/common/PixelButton';
 import { PixelCard } from '../components/common/PixelCard';
 import { PixelInput, PixelTextarea } from '../components/common/PixelInput';
-import { colors, fonts } from '../styles/theme';
+import { ScrollIcon } from '../components/common/Icons';
+import { EventCardSkeleton } from '../components/common/Skeleton';
 import type { Event } from '../types';
 
 export default function EventsPage() {
@@ -17,7 +18,6 @@ export default function EventsPage() {
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Form state
   const [title, setTitle] = useState('');
   const [eventType, setEventType] = useState('one_shot');
   const [description, setDescription] = useState('');
@@ -74,23 +74,11 @@ export default function EventsPage() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '8px',
-        }}
-      >
-        <h2
-          style={{
-            fontFamily: fonts.heading,
-            fontSize: '14px',
-            color: colors.treasureGold,
-          }}
-        >
-          🗓 Quest Board
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div className="page-header">
+        <h2 className="page-title">
+          <ScrollIcon size={18} />
+          Quest Board
         </h2>
         {user && (
           <PixelButton
@@ -103,23 +91,10 @@ export default function EventsPage() {
         )}
       </div>
 
-      {/* Create event form */}
       {showForm && (
-        <PixelCard>
-          <h3
-            style={{
-              fontFamily: fonts.heading,
-              fontSize: '11px',
-              color: colors.treasureGold,
-              marginBottom: '16px',
-            }}
-          >
-            Post a New Quest
-          </h3>
-          <form
-            onSubmit={handleCreateEvent}
-            style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
-          >
+        <PixelCard static>
+          <h3 style={{ marginBottom: 16 }}>Post a New Quest</h3>
+          <form onSubmit={handleCreateEvent} className="form-group">
             <PixelInput
               label="Quest Title"
               value={title}
@@ -129,30 +104,11 @@ export default function EventsPage() {
             />
 
             <div>
-              <label
-                style={{
-                  display: 'block',
-                  fontFamily: fonts.heading,
-                  fontSize: '8px',
-                  color: colors.treasureGold,
-                  marginBottom: '6px',
-                  textTransform: 'uppercase',
-                }}
-              >
-                Quest Type
-              </label>
+              <label className="pixel-input__label">Quest Type</label>
               <select
                 value={eventType}
                 onChange={(e) => setEventType(e.target.value)}
-                style={{
-                  width: '100%',
-                  background: colors.dungeonBlack,
-                  color: colors.parchment,
-                  border: `1px solid ${colors.stoneGray}`,
-                  padding: '8px 12px',
-                  fontFamily: fonts.body,
-                  fontSize: '13px',
-                }}
+                className="pixel-select"
               >
                 <option value="one_shot">One Shot</option>
                 <option value="campaign_session">Campaign Session</option>
@@ -193,19 +149,9 @@ export default function EventsPage() {
               max="20"
             />
 
-            {formError && (
-              <div
-                style={{
-                  fontFamily: fonts.body,
-                  fontSize: '12px',
-                  color: colors.dragonRed,
-                }}
-              >
-                {formError}
-              </div>
-            )}
+            {formError && <div className="error-banner">{formError}</div>}
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+            <div className="form-actions">
               <PixelButton
                 type="button"
                 variant="red"
@@ -227,45 +173,18 @@ export default function EventsPage() {
         </PixelCard>
       )}
 
-      {error && (
-        <div
-          style={{
-            fontFamily: fonts.body,
-            fontSize: '13px',
-            color: colors.dragonRed,
-            padding: '12px',
-            border: `1px solid ${colors.dragonRed}`,
-          }}
-        >
-          {error}
-        </div>
-      )}
+      {error && <div className="error-banner">{error}</div>}
 
       {isLoading && (
-        <div
-          style={{
-            fontFamily: fonts.heading,
-            fontSize: '10px',
-            color: colors.dimText,
-            textAlign: 'center',
-            padding: '40px',
-          }}
-        >
-          Consulting the oracle...
-        </div>
+        <>
+          <EventCardSkeleton />
+          <EventCardSkeleton />
+          <EventCardSkeleton />
+        </>
       )}
 
       {!isLoading && events.length === 0 && !error && (
-        <div
-          style={{
-            fontFamily: fonts.body,
-            fontSize: '14px',
-            color: colors.dimText,
-            textAlign: 'center',
-            padding: '40px',
-            lineHeight: '2',
-          }}
-        >
+        <div className="empty-state">
           No quests on the board.<br />
           Be the first to post one!
         </div>
